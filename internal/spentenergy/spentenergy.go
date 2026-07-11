@@ -58,7 +58,6 @@ func WalkingSpentCalories(steps int, weight, height float64, duration time.Durat
 	return spentCalories, nil
 }
 
-
 func RunningSpentCalories(steps int, weight, height float64, duration time.Duration) (float64, error) {
 	if steps <= 0 {
 		return 0, errors.New("количество шагов должно быть больше нуля")
