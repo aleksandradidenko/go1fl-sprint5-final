@@ -32,6 +32,33 @@ func MeanSpeed(steps int, height float64, duration time.Duration) float64 {
 	return meanSpeed
 }
 
+func WalkingSpentCalories(steps int, weight, height float64, duration time.Duration) (float64, error) {
+	if steps <= 0 {
+		return 0, errors.New("количество шагов должно быть больше нуля")
+	}
+
+	if weight <= 0 {
+		return 0, errors.New("вес должен быть больше нуля")
+	}
+
+	if height <= 0 {
+		return 0, errors.New("рост должен быть больше нуля")
+	}
+
+	if duration <= 0 {
+		return 0, errors.New("продолжительность должна быть больше нуля")
+	}
+
+	meanSpeed := MeanSpeed(steps, height, duration)
+	durationInMinutes := duration.Minutes()
+
+	spentCalories := weight * meanSpeed * durationInMinutes / minInH
+	spentCalories *= walkingCaloriesCoefficient
+
+	return spentCalories, nil
+}
+
+
 func RunningSpentCalories(steps int, weight, height float64, duration time.Duration) (float64, error) {
 	if steps <= 0 {
 		return 0, errors.New("количество шагов должно быть больше нуля")
@@ -55,8 +82,4 @@ func RunningSpentCalories(steps int, weight, height float64, duration time.Durat
 	spentCalories := weight * meanSpeed * durationInMinutes / minInH
 
 	return spentCalories, nil
-}
-
-func WalkingSpentCalories(steps int, weight, height float64, duration time.Duration) (float64, error) {
-	// TODO: реализовать функцию
 }
