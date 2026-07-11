@@ -27,10 +27,16 @@ func (t *Training) Parse(datastring string) (err error) {
 	if err != nil {
 		return err
 	}
+	if steps <= 0 {
+		return errors.New("количество шагов должно быть больше нуля")
+	}
 
 	duration, err := time.ParseDuration(parts[2])
 	if err != nil {
 		return err
+	}
+	if duration <= 0 {
+		return errors.New("продолжительность должна быть больше нуля")
 	}
 
 	t.Steps = steps
@@ -41,5 +47,5 @@ func (t *Training) Parse(datastring string) (err error) {
 }
 
 func (t Training) ActionInfo() (string, error) {
-	// TODO: реализовать функцию
+
 }
