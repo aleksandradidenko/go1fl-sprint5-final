@@ -1,6 +1,7 @@
 package spentenergy
 
 import (
+	"errors"
 	"time"
 )
 
@@ -12,18 +13,72 @@ const (
 	walkingCaloriesCoefficient = 0.5  // коэффициент для расчета калорий при ходьбе.
 )
 
-func WalkingSpentCalories(steps int, weight, height float64, duration time.Duration) (float64, error) {
-	// TODO: реализовать функцию
-}
+func Distance(steps int, height float64) float64 {
+	stepLength := height * stepLengthCoefficient
+	distance := float64(steps) * stepLength / mInKm
 
-func RunningSpentCalories(steps int, weight, height float64, duration time.Duration) (float64, error) {
-	// TODO: реализовать функцию
+	return distance
 }
 
 func MeanSpeed(steps int, height float64, duration time.Duration) float64 {
-	// TODO: реализовать функцию
+	if steps < 0 || duration <= 0 {
+		return 0
+	}
+
+	distance := Distance(steps, height)
+	durationInHours := duration.Hours()
+	meanSpeed := distance / durationInHours
+
+	return meanSpeed
 }
 
-func Distance(steps int, height float64) float64 {
-	// TODO: реализовать функцию
+func WalkingSpentCalories(steps int, weight, height float64, duration time.Duration) (float64, error) {
+	if steps <= 0 {
+		return 0, errors.New("количество шагов должно быть больше нуля")
+	}
+
+	if weight <= 0 {
+		return 0, errors.New("вес должен быть больше нуля")
+	}
+
+	if height <= 0 {
+		return 0, errors.New("рост должен быть больше нуля")
+	}
+
+	if duration <= 0 {
+		return 0, errors.New("продолжительность должна быть больше нуля")
+	}
+
+	meanSpeed := MeanSpeed(steps, height, duration)
+	durationInMinutes := duration.Minutes()
+
+	spentCalories := weight * meanSpeed * durationInMinutes / minInH
+	spentCalories *= walkingCaloriesCoefficient
+
+	return spentCalories, nil
+}
+
+func RunningSpentCalories(steps int, weight, height float64, duration time.Duration) (float64, error) {
+	if steps <= 0 {
+		return 0, errors.New("количество шагов должно быть больше нуля")
+	}
+
+	if weight <= 0 {
+		return 0, errors.New("вес должен быть больше нуля")
+	}
+
+	if height <= 0 {
+		return 0, errors.New("рост должен быть больше нуля")
+	}
+
+	if duration <= 0 {
+		return 0, errors.New("продолжительность должна быть больше нуля")
+	}
+
+	meanSpeed := MeanSpeed(steps, height, duration)
+	durationInMinutes := duration.Minutes()
+
+	spentCalories := weight * meanSpeed * durationInMinutes / minInH
+
+	return spentCalories, nil
 }
